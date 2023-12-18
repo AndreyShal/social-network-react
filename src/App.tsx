@@ -5,7 +5,7 @@ import {BrowserRouter, Route} from "react-router-dom";
 import state from "./redux/state";
 import {Header} from "./components/Header";
 import {Navbar} from "./components/Navbar";
-import {Profile} from "./components/Profile";
+import {Profile} from "./components/Profile/Profile";
 
 
 function App() {
