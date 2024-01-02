@@ -6,6 +6,7 @@ import state from "./redux/state";
 import {Header} from "./components/Header";
 import {Navbar} from "./components/Navbar";
 import {Profile} from "./components/Profile/Profile";
+import {Dialogs} from "./components/Dialogs/Dialogs";
 
 
 function App() {
@@ -14,13 +15,16 @@ function App() {
     let message2 = state.profilePage.posts[1].message;
 
 
-
     return (
         <BrowserRouter>
             <div className="app-wrapper">
                 <Header/>
                 <Navbar/>
-                <Profile/>
+                <div className={"app-wrapper-content"}>
+                    <Route path={"/dialogs"} component={Dialogs}/>
+                    <Route path={"/profile"} component={Profile}/>
+                </div>
+
                 {/*<Test1/>*/}
                 {/*Hello, samurai! Let's go!*/}
                 {/*<Route path={"/hello"} render={() => <HelloMessage message={message}/>}/>*/}

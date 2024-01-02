@@ -28,8 +28,23 @@
 .nav {
   grid-area: n;
   background-color: blanchedalmond;
+  padding: 20px;
 }
 
-.content {
+.nav a {
+  text-decoration: none;
+}
+
+.a--def {
+  color: white;
+}
+
+.a--act {
+  color: gold;
+}
+
+.app-wrapper-content {
   grid-area: c;
 }
+
+
