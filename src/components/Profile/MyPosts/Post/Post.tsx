@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 
-type PostType = {
+type PostProps = {
     message: string
     likesCount: number
 }
 
-export const Post = (props: PostType) => {
+export const Post = (props: PostProps) => {
     const [num, setNum] = useState(true);
     return <div>
         <img width={"20px"}
