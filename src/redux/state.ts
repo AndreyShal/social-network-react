@@ -32,13 +32,29 @@ export type RootStateType = {
     sidebar: SidebarType
 }
 
+type AddPostActionType = {
+    type: "ADD-POST",
+    payload: {
+        newPost: string
+    }
+}
+type UpdateNewPostTextActionType = {
+    type: "UPDATE-NEW-POST-TEXT",
+    payload: {
+        newText: string
+    }
+}
+
+export type ActionType = AddPostActionType | UpdateNewPostTextActionType
+
 export type StoreType = {
     _state: RootStateType
-    getState: ()=> RootStateType
-    addPost: (postMessage: string) => void
-    updateNewPostText: (newText: string) => void
-    subscribe: (observer: (callback: RootStateType) => void) => void
     _callSubscriber: (state: RootStateType) => void
+
+    getState: ()=> RootStateType
+    subscribe: (observer: (callback: RootStateType) => void) => void
+
+    dispatch: (action: ActionType) => void
 }
 
 export const store: StoreType = {
@@ -77,19 +93,20 @@ export const store: StoreType = {
     _callSubscriber(state: RootStateType) {
         console.log("state changed")
     },
-    addPost(postMessage: string) {
-        let newPost = {id: new Date().getTime(), message: postMessage, likesCount: 0};
-        this._state.profilePage.posts.push(newPost);
-        this._state.profilePage.messageForNewPost = '';
-        this._callSubscriber(this._state);
-    },
-    updateNewPostText(newText: string) {
-        this._state.profilePage.messageForNewPost = newText
-        this._callSubscriber(this._state)
-    },
     subscribe(observer: (callback: RootStateType) => void) {
         this._callSubscriber = observer
     },
+    dispatch(action: ActionType) {
+        if(action.type === "ADD-POST") {
+            let newPost = {id: new Date().getTime(), message: action.payload.newPost, likesCount: 0};
+            this._state.profilePage.posts.push(newPost);
+            this._state.profilePage.messageForNewPost = '';
+            this._callSubscriber(this._state);
+        } else if(action.type === "UPDATE-NEW-POST-TEXT") {
+            this._state.profilePage.messageForNewPost = action.payload.newText
+            this._callSubscriber(this._state)
+        }
+    }
 
 }
 

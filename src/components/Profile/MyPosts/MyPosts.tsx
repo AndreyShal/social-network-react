@@ -1,12 +1,12 @@
 import React from "react";
 import s from "./myPost.module.css"
-import {PostType} from "../../../redux/state";
+import {ActionType, PostType} from "../../../redux/state";
 import {Post} from "./Post/Post";
 
 
 type MyPostsProps = {
     posts: PostType[]
-    addPost: (postMessage: string) => void
+    dispatch: (action: ActionType) => void
 }
 
 export const MyPosts = (props: MyPostsProps) => {
@@ -15,7 +15,7 @@ export const MyPosts = (props: MyPostsProps) => {
 
     const addPost = () => {
         let text = newPostElement.current?.value;
-        if(text) props.addPost(text)
+        if(text)  props.dispatch({type: 'ADD-POST', payload: {newPost: text}})
     }
 
     return <div className={s.postsBlock}>

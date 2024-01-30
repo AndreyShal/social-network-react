@@ -7,7 +7,7 @@ import store, {RootStateType, StoreType} from "./redux/state"
 
 export const renderTree = (state:RootStateType) => {
     ReactDOM.render(
-        <App store={store} state={state} addPost={store.addPost.bind(store)} updateNewPostText={store.updateNewPostText.bind(store) }/>,
+        <App store={store} state={state} dispatch={store.dispatch.bind(store)}/>,
         document.getElementById('root')
     );
 }

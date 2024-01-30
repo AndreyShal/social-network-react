@@ -2,7 +2,7 @@ import React, {ChangeEvent, createRef, LegacyRef, RefObject} from 'react';
 import './App.css';
 // import Test1 from "./Test1";
 import {BrowserRouter, Route} from "react-router-dom";
-import store, {PostType, RootStateType, StoreType} from "./redux/state";
+import store, {ActionType, PostType, RootStateType, StoreType} from "./redux/state";
 import {Header} from "./components/Header";
 import {Navbar} from "./components/Navbar";
 import {Profile} from "./components/Profile/Profile";
@@ -13,8 +13,7 @@ import {message} from "antd";
 type AppProps = {
     store: StoreType
     state: RootStateType
-    addPost: (postMessage: string) => void
-    updateNewPostText: (newMessage: string) => void
+    dispatch: (action: ActionType) => void
 }
 
 
@@ -38,11 +37,11 @@ function App(props: AppProps) {
                     />
                     <Route
                         path={"/profile"}
-                        render={() => <Profile posts={props.state.profilePage.posts} addPost={props.addPost}/>}
+                        render={() => <Profile posts={props.state.profilePage.posts} dispatch={props.dispatch}/>}
                     />
                     <Route path={"/hello"}
                            render={() => <HelloMessage message={props.state.profilePage.messageForNewPost} posts={props.state.profilePage.posts} newPostText={props.state.profilePage.messageForNewPost}
-                                                       addPostCallback={props.addPost} updateNewPostTextCallback={props.updateNewPostText}/>}/>
+                                                       dispatch={props.dispatch}/>}/>
                 </div>
 
                 {/*<Test1/>*/}
@@ -60,21 +59,21 @@ type MessageTypeProps = {
     newPostText: string
     message: string
     posts: Array<PostType>
-    addPostCallback: (postCallback: string) => void
-    updateNewPostTextCallback: (newText: string) => void
+    dispatch: (action: ActionType) => void
 }
 
 const HelloMessage = (props: MessageTypeProps) => {
     const textareaRef = createRef<HTMLTextAreaElement>();
 
     const addPost = () => {
-        // props.addPostCallback(props.message)
-        props.updateNewPostTextCallback("")
+        props.dispatch({type: 'ADD-POST', payload: {newPost: props.message}})
+        props.dispatch({type: 'ADD-POST', payload: {newPost: props.message}})
+
+        props.dispatch({type: 'UPDATE-NEW-POST-TEXT', payload: {newText: ''}})
     }
 
     const newTextChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        props.updateNewPostTextCallback(e.currentTarget.value)
-        // props.addPostCallback(e.currentTarget.value)
+        props.dispatch({type: 'UPDATE-NEW-POST-TEXT', payload: {newText: e.currentTarget.value}})
     }
     return (
         <div>
