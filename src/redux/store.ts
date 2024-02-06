@@ -1,3 +1,17 @@
+import {
+    AddPostActionType,
+    profileReducer,
+    ProfileReducerActionType,
+    UpdateNewPostTextActionType
+} from "./profile-reducer";
+import {
+    AddMessageActionType,
+    dialogsReducer,
+    DialogsReducerActionType,
+    UpdateNewMessageBodyActionType
+} from "./dialogs-reducer";
+import {sidebarReducer} from "./sidebar-reducer";
+
 export type DialogType = {
     id: number
     name: string
@@ -22,9 +36,10 @@ export type ProfilePageType = {
 export type DialogPageType = {
     dialogs: Array<DialogType>
     messages: Array<MessageType>
+    newMessageBody: string
 }
 
-type SidebarType = {}
+export type SidebarType = {}
 
 export type RootStateType = {
     profilePage: ProfilePageType
@@ -32,20 +47,7 @@ export type RootStateType = {
     sidebar: SidebarType
 }
 
-type AddPostActionType = {
-    type: "ADD-POST",
-    payload: {
-        newPost: string
-    }
-}
-type UpdateNewPostTextActionType = {
-    type: "UPDATE-NEW-POST-TEXT",
-    payload: {
-        newText: string
-    }
-}
-
-export type ActionType = AddPostActionType | UpdateNewPostTextActionType
+export type ActionType = ProfileReducerActionType | DialogsReducerActionType
 
 export type StoreType = {
     _state: RootStateType
@@ -83,7 +85,8 @@ export const store: StoreType = {
                 {id: 3, message: 'Yo'},
                 {id: 4, message: 'Yo'},
                 {id: 5, message: 'Yo'},
-            ]
+            ],
+            newMessageBody: "",
         },
         sidebar: {}
     },
@@ -94,20 +97,15 @@ export const store: StoreType = {
         console.log("state changed")
     },
     subscribe(observer: (callback: RootStateType) => void) {
+        // renderTree(state)
         this._callSubscriber = observer
     },
     dispatch(action: ActionType) {
-        if(action.type === "ADD-POST") {
-            let newPost = {id: new Date().getTime(), message: action.payload.newPost, likesCount: 0};
-            this._state.profilePage.posts.push(newPost);
-            this._state.profilePage.messageForNewPost = '';
-            this._callSubscriber(this._state);
-        } else if(action.type === "UPDATE-NEW-POST-TEXT") {
-            this._state.profilePage.messageForNewPost = action.payload.newText
-            this._callSubscriber(this._state)
-        }
+        this._state.profilePage = profileReducer(this._state.profilePage, action)
+        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
+        this._state.sidebar = sidebarReducer(this._state.sidebar, action)
+        this._callSubscriber(this._state);
     }
-
 }
 
 export default store;
