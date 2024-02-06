@@ -1,29 +1,35 @@
-import React from "react";
+import React, {ChangeEvent} from "react";
 import s from "./myPost.module.css"
-import {ActionType, PostType} from "../../../redux/state";
+import { PostType} from "../../../redux/store";
 import {Post} from "./Post/Post";
 
 
 type MyPostsProps = {
     posts: PostType[]
-    dispatch: (action: ActionType) => void
+    messageForNewPost: string
+    onPostChange: (text: string) => void
+    addPost: (text: string) => void
 }
 
 export const MyPosts = (props: MyPostsProps) => {
 
     let newPostElement = React.createRef<HTMLTextAreaElement>()
 
-    const addPost = () => {
+    const addPostHandler = () => {
         let text = newPostElement.current?.value;
-        if(text)  props.dispatch({type: 'ADD-POST', payload: {newPost: text}})
+        if(text)  props.addPost(text)
+    }
+
+    const newTextChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        props.onPostChange(e.currentTarget.value)
     }
 
     return <div className={s.postsBlock}>
         <h3>My posts</h3>
         <div>
-            <div><textarea ref={newPostElement}></textarea></div>
+            <div><textarea ref={newPostElement} value={props.messageForNewPost} onChange={newTextChangeHandler}></textarea></div>
             <div>
-                <button onClick={addPost}>Add post</button>
+                <button onClick={addPostHandler}>Add post</button>
             </div>
         </div>
         <div className={s.posts}>
