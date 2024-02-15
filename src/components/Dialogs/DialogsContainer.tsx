@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 import {ActionType, RootStateType} from "../../redux/store";
 import {AppStateType} from "../../redux/redux-store";
 
-
 const mapStateToProps = (state: AppStateType) => {
     return {
         dialogsPage: state.dialogsPage,
