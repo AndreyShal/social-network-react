@@ -1,4 +1,13 @@
-import {ActionType, PostType, ProfilePageType} from "./store";
+export type PostType = {
+    id: number
+    message: string
+    likesCount: number
+}
+
+export type ProfilePageType = {
+    messageForNewPost: string
+    posts: Array<PostType>
+}
 
 const initialState = {
     messageForNewPost: 'it camasutra',
@@ -10,7 +19,7 @@ const initialState = {
     ]
 }
 
-export const profileReducer = (state: ProfilePageType = initialState, action: ActionType) => {
+export const profileReducer = (state: ProfilePageType = initialState, action: ProfileReducerActionType): ProfilePageType => {
     switch (action.type) {
         case "ADD-POST": {
             let newPost: PostType = {id: new Date().getTime(), message: action.payload.newPost, likesCount: 0};

@@ -1,65 +1,36 @@
 import {
-    AddPostActionType,
+    AddPostActionType, ProfilePageType,
     profileReducer,
     ProfileReducerActionType,
     UpdateNewPostTextActionType
 } from "./profile-reducer";
 import {
-    AddMessageActionType,
+    AddMessageActionType, DialogPageType,
     dialogsReducer,
     DialogsReducerActionType,
     UpdateNewMessageBodyActionType
 } from "./dialogs-reducer";
-import {sidebarReducer} from "./sidebar-reducer";
+import {sidebarReducer, SidebarType} from "./sidebar-reducer";
 
-export type DialogType = {
-    id: number
-    name: string
-}
-
-export type MessageType = {
-    id: number
-    message: string
-}
-
-export type PostType = {
-    id: number
-    message: string
-    likesCount: number
-}
-
-export type ProfilePageType = {
-    messageForNewPost: string
-    posts: Array<PostType>
-}
-
-export type DialogPageType = {
-    dialogs: Array<DialogType>
-    messages: Array<MessageType>
-    newMessageBody: string
-}
-
-export type SidebarType = {}
-
-export type RootStateType = {
+type RootStateType = {
     profilePage: ProfilePageType
     dialogsPage: DialogPageType
     sidebar: SidebarType
 }
 
-export type ActionType = ProfileReducerActionType | DialogsReducerActionType
+type ActionType = ProfileReducerActionType | DialogsReducerActionType
 
-export type StoreType = {
+type StoreType = {
     _state: RootStateType
     _callSubscriber: (state: RootStateType) => void
 
-    getState: ()=> RootStateType
+    getState: () => RootStateType
     subscribe: (observer: (callback: RootStateType) => void) => void
 
     dispatch: (action: ActionType) => void
 }
 
-export const store: StoreType = {
+const store: StoreType = {
     _state: {
         profilePage: {
             messageForNewPost: 'it camasutra',
@@ -100,7 +71,7 @@ export const store: StoreType = {
         // renderTree(state)
         this._callSubscriber = observer
     },
-    dispatch(action: ActionType) {
+    dispatch(action: any) {
         this._state.profilePage = profileReducer(this._state.profilePage, action)
         this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
         this._state.sidebar = sidebarReducer(this._state.sidebar, action)

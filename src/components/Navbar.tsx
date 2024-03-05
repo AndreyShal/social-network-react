@@ -24,6 +24,8 @@ export const Navbar = () => {
             </div>
             <div><CustomNavLink to={"/dialogs"}>Messages</CustomNavLink>
             </div>
+            <div><CustomNavLink to={"/users"}>Users</CustomNavLink>
+            </div>
             <div><CustomNavLink to={"/news"}>News</CustomNavLink></div>
             <div><CustomNavLink to={"/music"}>Music</CustomNavLink>
             </div>

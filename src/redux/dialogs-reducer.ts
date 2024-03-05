@@ -1,4 +1,18 @@
-import {ActionType, DialogPageType, MessageType} from "./store";
+export type DialogType = {
+    id: number
+    name: string
+}
+
+export type MessageType = {
+    id: number
+    message: string
+}
+
+export type DialogPageType = {
+    dialogs: Array<DialogType>
+    messages: Array<MessageType>
+    newMessageBody: string
+}
 
 const initialState = {
     dialogs: [
@@ -19,7 +33,7 @@ const initialState = {
     newMessageBody: "",
 }
 
-export const dialogsReducer = (state: DialogPageType = initialState, action: ActionType) => {
+export const dialogsReducer = (state: DialogPageType = initialState, action: DialogsReducerActionType): DialogPageType => {
     switch (action.type) {
         case "ADD-MESSAGE": {
             let newMessage: MessageType = {id: 6, message: action.payload.newMessage}
