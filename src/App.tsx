@@ -1,12 +1,11 @@
-import React, {ChangeEvent, createRef, LegacyRef, RefObject} from 'react';
+import React from 'react';
 import './App.css';
-// import Test1 from "./Test1";
-import {BrowserRouter, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 import {Header} from "./components/Header";
 import {Navbar} from "./components/Navbar";
-import {Profile} from "./components/Profile/Profile";
 import {DialogsContainer} from "./components/Dialogs/DialogsContainer";
 import UsersContainer from "./components/Users/UsersContainer";
+import ProfileContainer from "./components/Profile/ProfileContainer";
 
 
 type AppProps = {}
@@ -24,8 +23,8 @@ function App(props: AppProps) {
                         render={() => <DialogsContainer/>}
                     />
                     <Route
-                        path={"/profile"}
-                        render={() => <Profile/>}
+                        path={"/profile/:userId"}
+                        render={() => <ProfileContainer/>}
                     />
                     <Route
                         path={"/users"}
