@@ -3,6 +3,8 @@ import userPhoto from "../../assests/images/user.jpg";
 import React from "react";
 import {UsersType} from "../../redux/users-reducer";
 import {NavLink} from "react-router-dom";
+import axios from "axios";
+import {usersAPI} from "../../api/api";
 
 type UsersProps = {
     totalUsersCount: number
@@ -36,11 +38,19 @@ const Users = (props: UsersProps) => {
         {props.users.map(u => {
 
             const FollowChange = () => {
-                props.follow(u.id)
+                usersAPI.follow(u.id).then(data => {
+                    if (data.resultCode) {
+                        props.follow(u.id)
+                    }
+                })
             }
 
             const UnFollowChange = () => {
-                props.unfollow(u.id)
+                usersAPI.unFollow(u.id).then(data => {
+                    if (data.resultCode) {
+                        props.unfollow(u.id)
+                    }
+                })
             }
 
             return (
