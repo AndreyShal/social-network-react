@@ -1,10 +1,8 @@
 import React from "react";
 import {Header} from "./Header";
-import axios from "axios";
 import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
-import {setAuthUserData} from "../../redux/auth-reducer";
-import {usersAPI} from "../../api/api";
+import {authMe, setAuthUserData} from "../../redux/auth-reducer";
 
 type MapStatePropsType = {
     userId: null | number,
@@ -15,6 +13,7 @@ type MapStatePropsType = {
 
 type MapDispatchToProps = {
     setAuthUserData: (userId:number, email:string, login:string) => void
+    authMe: () => void
 }
 
 export type HeaderPropsType = MapStatePropsType & MapDispatchToProps
@@ -23,21 +22,18 @@ const mapStateToProps = (state: AppStateType):MapStatePropsType => ({
     userId: state.auth.userId,
     email: state.auth.email,
     login: state.auth.login,
-    isAuth: state.auth.isAuth
+    isAuth: state.auth.isAuth,
 })
 
 const mapDispatchToProps: MapDispatchToProps = {
-    setAuthUserData
+    setAuthUserData,
+    authMe
 }
 
-class HeaderContainer extends React.Component<any, any> {
+class HeaderContainer extends React.Component<HeaderPropsType> {
     componentDidMount() {
-        usersAPI.authMe().then(data=> {
-            if(data.resultCode === 0) {
-                const {id, email, login} = data.data
-                this.props.setAuthUserData(id, email, login)
-            }
-        })
+        this.props.authMe()
+        console.log(this.props.userId ? this.props.userId : "no userId")
     }
 
     render() {

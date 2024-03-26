@@ -1,9 +1,13 @@
+import {Dispatch} from "redux";
+import {usersAPI} from "../api/api";
+
 const initialState: InitialStateType = {
     users: [],
     pageSize: 5,
     totalUsersCount: 0,
     currentPage: 2,
-    isFetching: false
+    isFetching: true,
+    followingInProgress: []
 }
 
 export const usersReducer = (state: InitialStateType = initialState, action: UsersReducerActionType): InitialStateType => {
@@ -40,14 +44,22 @@ export const usersReducer = (state: InitialStateType = initialState, action: Use
         case "TOGGLE_IS_FETCHING": {
             return {...state, isFetching: action.payload.isFetching}
         }
+        case "TOGGLE_IS_FOLLOWING_PROGRESS": {
+            return {
+                ...state,
+                followingInProgress: action.payload.isFetching ?
+                    [...state.followingInProgress, action.payload.userId] :
+                    state.followingInProgress.filter(el => el !== action.payload.userId)
+            }
+        }
         default:
             return state
     }
 }
 
-export type FollowType = ReturnType<typeof follow>
+export type FollowType = ReturnType<typeof followSuccess>
 
-export const follow = (userId: number) => {
+export const followSuccess = (userId: number) => {
     return {
         type: 'FOLLOW',
         payload: {
@@ -56,7 +68,7 @@ export const follow = (userId: number) => {
     } as const
 }
 
-export const unfollow = (userId: number) => {
+export const unfollowSuccess = (userId: number) => {
     return {
         type: 'UNFOLLOW',
         payload: {
@@ -102,6 +114,55 @@ export const toggleIsFetching = (isFetching: boolean) => {
     } as const
 }
 
+export const toggleFollowingProgress = (isFetching: boolean, userId: number) => {
+    return {
+        type: 'TOGGLE_IS_FOLLOWING_PROGRESS',
+        payload: {
+            isFetching,
+            userId
+        }
+    } as const
+}
+
+//thanks
+export const getUsers = (currentPage: number, pageSize: number) => (dispatch: Dispatch) => {
+    dispatch(toggleIsFetching(true))
+
+    usersAPI.getUsers(currentPage, pageSize).then(res => {
+        const data = res.data;
+        dispatch(setCurrentPage(currentPage));
+        dispatch(setUsers(data.items))
+        dispatch(setUsersTotalCount(data.totalCount))
+        dispatch(toggleIsFetching(false))
+    })
+}
+
+export const follow = (userId: number) => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleFollowingProgress(true, userId))
+        usersAPI.follow(userId).then(res => {
+            const data = res.data
+            if (data.resultCode === 0) {
+                dispatch(followSuccess(userId))
+            }
+            dispatch(toggleFollowingProgress(false, userId))
+        })
+    }
+}
+export const unfollow = (userId: number) => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleFollowingProgress(true, userId))
+        usersAPI.unFollow(userId).then(res => {
+            const data = res.data
+            if (data.resultCode === 0) {
+                dispatch(unfollowSuccess(userId))
+            }
+            dispatch(toggleFollowingProgress(false, userId))
+        })
+    }
+}
+
+
 //types
 export type UserLocation = {
     city: string, country: string
@@ -123,10 +184,19 @@ export type InitialStateType = {
     totalUsersCount: number
     currentPage: number
     isFetching: boolean
+    followingInProgress: number[]
 }
-export type UnfollowType = ReturnType<typeof unfollow>
+export type UnfollowType = ReturnType<typeof unfollowSuccess>
 export type SetUsersType = ReturnType<typeof setUsers>
 export type SetCurrentPageType = ReturnType<typeof setCurrentPage>
 export type SetTotalUsersCountType = ReturnType<typeof setUsersTotalCount>
 export type ToggleIsFetchingType = ReturnType<typeof toggleIsFetching>
-export type UsersReducerActionType = FollowType | UnfollowType | SetUsersType | SetCurrentPageType | SetTotalUsersCountType | ToggleIsFetchingType
+export type ToggleFollowingProgressType = ReturnType<typeof toggleFollowingProgress>
+export type UsersReducerActionType =
+    FollowType
+    | UnfollowType
+    | SetUsersType
+    | SetCurrentPageType
+    | SetTotalUsersCountType
+    | ToggleIsFetchingType
+    | ToggleFollowingProgressType

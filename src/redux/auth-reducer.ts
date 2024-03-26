@@ -1,3 +1,7 @@
+import {authApi, usersAPI} from "../api/api";
+import {Dispatch} from "redux";
+import {followSuccess, toggleFollowingProgress} from "./users-reducer";
+
 const initialState: InitialStateType = {
     userId: null,
     login: null,
@@ -36,6 +40,19 @@ export const toggleIsFetching = (isFetching: boolean) => {
         }
     } as const
 }
+
+//thanks
+export const authMe = () => (dispatch: Dispatch) => {
+    authApi.authMe().then(res=> {
+        const data = res.data
+        if(data.resultCode === 0) {
+            const {id, email, login} = data.data
+            dispatch(setAuthUserData(id, email, login))
+        }
+    })
+}
+
+
 
 //types
 export type InitialStateType = {

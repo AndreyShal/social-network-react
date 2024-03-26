@@ -8,6 +8,6 @@ type DialogItemPropsType = {
 }
 
 export const DialogItem = (props: DialogItemPropsType) => {
-    let path = `/dialogs/${props.id}`;
+    const path = `/dialogs/${props.id}`;
     return <div className={clsx(s.dialog,s.active)}><NavLink to={path}>{props.name}</NavLink></div>
 }

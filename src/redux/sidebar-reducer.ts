@@ -1,6 +1,4 @@
-import {AddPostActionType, UpdateNewPostTextActionType} from "./profile-reducer";
-
-export type SidebarType = {}
+export type SidebarType = object
 
 const initialState = {}
 

@@ -6,10 +6,10 @@ import {MyPostsPropsType} from "./MyPostsContainer";
 
 export const MyPosts = (props: MyPostsPropsType) => {
 
-    let newPostElement = React.createRef<HTMLTextAreaElement>()
+    const newPostElement = React.createRef<HTMLTextAreaElement>()
 
     const addPostHandler = () => {
-        let text = newPostElement.current?.value;
+        const text = newPostElement.current?.value;
         if(text)  props.addPost(text)
     }
 
