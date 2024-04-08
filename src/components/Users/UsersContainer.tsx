@@ -1,38 +1,29 @@
 import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
-import {follow, getUsers, toggleFollowingProgress, unfollow, UsersType,} from "../../redux/users-reducer";
+import {follow, getUsers, toggleFollowingProgress, unfollow,} from "../../redux/users-reducer";
 import React from "react";
 import Users from "./Users";
 import {Preloader} from "../common/Preloader/Preloader";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
-
-type MapStatePropsType = {
-    users: UsersType[]
-    pageSize: number
-    totalUsersCount: number
-    currentPage: number
-    isFetching: boolean
-    followingInProgress: number[]
-}
-
-type MapDispatchToProps = {
-    follow: (userID: number) => void
-    unfollow: (userID: number) => void
-    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
-    getUsers: (currentPage: number, pageSize: number) => void
-
-}
-export type UsersPropsType = MapStatePropsType & MapDispatchToProps
+import {
+    selectGetCurrentPage,
+    selectGetFollowingInProgress,
+    selectGetIsFetching,
+    selectGetPageSize,
+    selectGetTotalUsersCount,
+    selectGetUsersSuperSelector
+} from "../../redux/users-selectors";
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
+    console.log('mapStateToProps USERS')
     return {
-        users: state.usersPage.users,
-        pageSize: state.usersPage.pageSize,
-        totalUsersCount: state.usersPage.totalUsersCount,
-        currentPage: state.usersPage.currentPage,
-        isFetching: state.usersPage.isFetching,
-        followingInProgress: state.usersPage.followingInProgress
+        users: selectGetUsersSuperSelector(state),
+        pageSize: selectGetPageSize(state),
+        totalUsersCount: selectGetTotalUsersCount(state),
+        currentPage: selectGetCurrentPage(state),
+        isFetching: selectGetIsFetching(state),
+        followingInProgress: selectGetFollowingInProgress(state)
     }
 }
 
@@ -58,6 +49,7 @@ class UsersContainer extends React.Component<UsersPropsType> {
     }
 
     render() {
+        console.log("render USERS")
         return <>
             {this.props.isFetching ? <Preloader/> : null}
             <Users totalUsersCount={this.props.totalUsersCount} pageSize={this.props.pageSize}
@@ -70,3 +62,22 @@ class UsersContainer extends React.Component<UsersPropsType> {
 }
 
 export default compose<React.ComponentType>(connect(mapStateToProps, mapDispatchToProps),withAuthRedirect)(UsersContainer)
+
+//types
+type MapStatePropsType = {
+    users: any
+    pageSize: ReturnType<typeof selectGetPageSize>
+    totalUsersCount: ReturnType<typeof selectGetTotalUsersCount>
+    currentPage: ReturnType<typeof selectGetCurrentPage>
+    isFetching: ReturnType<typeof selectGetIsFetching>
+    followingInProgress: ReturnType<typeof selectGetFollowingInProgress>
+}
+
+type MapDispatchToProps = {
+    follow: (userID: number) => void
+    unfollow: (userID: number) => void
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
+    getUsers: (currentPage: number, pageSize: number) => void
+
+}
+export type UsersPropsType = MapStatePropsType & MapDispatchToProps

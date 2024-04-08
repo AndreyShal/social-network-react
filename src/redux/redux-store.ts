@@ -4,8 +4,9 @@ import {profileReducer} from "./profile-reducer";
 import {sidebarReducer} from "./sidebar-reducer";
 import {usersReducer} from "./users-reducer";
 import {authReducer} from "./auth-reducer";
-import thunkMiddleware, {ThunkDispatch} from 'redux-thunk'
+import thunkMiddleware, {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {useDispatch} from "react-redux";
+import {appReducer} from "./app-reducer";
 
 
 const rootReducer = combineReducers({
@@ -14,10 +15,12 @@ const rootReducer = combineReducers({
     sidebarPage: sidebarReducer,
     usersPage: usersReducer,
     auth: authReducer,
+    app: appReducer
 })
 
 export type AppStateType = ReturnType<typeof rootReducer>
 // export type AppDispatchType = ThunkDispatch<AppStateType, unknown, AnyAction>
+// export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppStateType, unknown, {type: string}>
 
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
 

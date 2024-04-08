@@ -11,7 +11,6 @@ export type MessageType = {
 export type DialogPageType = {
     dialogs: Array<DialogType>
     messages: Array<MessageType>
-    newMessageBody: string
 }
 
 const initialState = {
@@ -30,24 +29,20 @@ const initialState = {
         {id: 4, message: 'Yo'},
         {id: 5, message: 'Yo'},
     ],
-    newMessageBody: "",
 }
 
 export const dialogsReducer = (state: DialogPageType = initialState, action: DialogsReducerActionType): DialogPageType => {
     switch (action.type) {
         case "ADD-MESSAGE": {
             const newMessage: MessageType = {id: 6, message: action.payload.newMessage}
-            return {...state, messages: [newMessage, ...state.messages], newMessageBody: ""}
-        }
-        case "UPDATE-NEW-MESSAGE-BODY": {
-            return {...state, newMessageBody: action.payload.newText}
+            return {...state, messages: [newMessage, ...state.messages]}
         }
         default:
             return state
     }
 }
 
-export type DialogsReducerActionType = AddMessageActionType | UpdateNewMessageBodyActionType
+export type DialogsReducerActionType = AddMessageActionType
 
 export type AddMessageActionType = ReturnType<typeof addMessageActionCreator>
 export const addMessageActionCreator = (newMessage: string) => {
@@ -59,13 +54,13 @@ export const addMessageActionCreator = (newMessage: string) => {
     } as const
 }
 
-export type UpdateNewMessageBodyActionType = ReturnType<typeof updateNewMessageBodyActionCreator>
+// export type UpdateNewMessageBodyActionType = ReturnType<typeof updateNewMessageBodyActionCreator>
 
-export const updateNewMessageBodyActionCreator = (newText: string) => {
-    return {
-        type: 'UPDATE-NEW-MESSAGE-BODY',
-        payload: {
-            newText
-        }
-    } as const
-}
+// export const updateNewMessageBodyActionCreator = (newText: string) => {
+//     return {
+//         type: 'UPDATE-NEW-MESSAGE-BODY',
+//         payload: {
+//             newText
+//         }
+//     } as const
+// }

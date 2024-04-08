@@ -1,6 +1,6 @@
-import {authApi, usersAPI} from "../api/api";
+import {authApi} from "../api/api";
 import {Dispatch} from "redux";
-import {followSuccess, toggleFollowingProgress} from "./users-reducer";
+import {setAppError} from "./app-reducer";
 
 const initialState: InitialStateType = {
     userId: null,
@@ -13,7 +13,7 @@ const initialState: InitialStateType = {
 export const authReducer = (state: InitialStateType = initialState, action: AuthReducerActionType): InitialStateType => {
     switch (action.type) {
         case "SET_USER_DATA": {
-            return {...state, ...action.payload.data, isAuth: true}
+            return {...state, ...action.payload.data}
         }
         case "TOGGLE_IS_FETCHING": {
             return {...state, isFetching: action.payload.isFetching}
@@ -23,11 +23,11 @@ export const authReducer = (state: InitialStateType = initialState, action: Auth
     }
 }
 
-export const setAuthUserData = (userId:number, email:string, login:string) => {
+export const setAuthUserData = (userId:number | null, email:string | null, login:string | null, isAuth: boolean) => {
     return {
         type: 'SET_USER_DATA',
         payload: {
-            data: {userId, email,login}
+            data: {userId, email,login, isAuth}
         }
     } as const
 }
@@ -42,15 +42,37 @@ export const toggleIsFetching = (isFetching: boolean) => {
 }
 
 //thanks
-export const authMe = () => (dispatch: Dispatch) => {
-    authApi.authMe().then(res=> {
+export const getAuthUserData = ():any => (dispatch: Dispatch) => {
+    return authApi.authMe().then(res=> {
         const data = res.data
         if(data.resultCode === 0) {
             const {id, email, login} = data.data
-            dispatch(setAuthUserData(id, email, login))
+            dispatch(setAuthUserData(id, email, login, true))
         }
     })
 }
+
+export const login = (email: string, password: string, rememberMe:boolean) => (dispatch: Dispatch) => {
+    authApi.login(email,password,rememberMe).then(res=> {
+        const data = res.data
+        if(data.resultCode === 0) {
+            dispatch(getAuthUserData())
+        } else {
+            const message = res.data.messages.length > 0 ? res.data.messages[0] : "Some error"
+            dispatch(setAppError(message))
+        }
+    })
+}
+
+export const logout = () => (dispatch: Dispatch) => {
+    authApi.logout().then(res=> {
+        const data = res.data
+        if(data.resultCode === 0) {
+            dispatch(setAuthUserData(null,null,null,false))
+        }
+    })
+}
+
 
 
 

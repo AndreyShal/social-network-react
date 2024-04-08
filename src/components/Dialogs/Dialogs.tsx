@@ -1,22 +1,14 @@
 import s from "./dialogs.module.css"
 import {Message} from "./Message/Message";
 import {DialogItem} from "./DialogItem/DialogItem";
-import {ChangeEvent, createRef} from "react";
 import {DialogsPropsType} from "./DialogsContainer";
+import {useFormik} from "formik";
+import {Textarea} from "../common/Preloader/FormsControls/FormsControls";
+import {maxLengthFn, requiredFn} from "../../utils/validators/validators";
 
 export const Dialogs = (props: DialogsPropsType) => {
-    const {dialogs, messages, newMessageBody} = props.dialogsPage;
-    const textareaRef = createRef<HTMLTextAreaElement>();
-
-    const addMessageHandler = () => {
-        if (!textareaRef.current) return
-        props.addMessage(textareaRef.current.value)
-    }
-
-    const onChangePostHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        props.onChangePost(e.currentTarget.value)
-    }
-
+    const dialogs = props.dialogsPage.dialogs;
+    const messages = props.dialogsPage.messages;
 
     return (
         <div className={s.dialogs}>
@@ -30,10 +22,51 @@ export const Dialogs = (props: DialogsPropsType) => {
                     return <Message key={el.id} message={el.message}/>
                 })}
             </div>
-            <div>
-                <textarea ref={textareaRef} value={newMessageBody} onChange={onChangePostHandler}/>
-                <button onClick={addMessageHandler}>add message</button>
-            </div>
+            <AddMessageForm addMessage={(value) => props.addMessage(value)}/>
         </div>
     )
+}
+
+type FormikErrorType = {
+    newMessageBody?: string
+}
+
+type AddMessageForm = {
+    addMessage: (value: string) => void
+}
+
+const AddMessageForm = (props: AddMessageForm) => {
+
+    const formik = useFormik({
+        initialValues: {
+            newMessageBody: "",
+        },
+        validate: values => {
+            const errors: FormikErrorType = {}
+            const newMessageBody = values.newMessageBody
+            if (requiredFn(newMessageBody)) {
+                errors.newMessageBody = requiredFn(newMessageBody)
+            }
+            if (maxLengthFn(30)(newMessageBody)) {
+                errors.newMessageBody = maxLengthFn(30)(newMessageBody)
+            }
+            return errors
+        },
+        onSubmit: values => {
+            props.addMessage(values.newMessageBody)
+            formik.resetForm()
+        },
+    });
+
+    return <form onSubmit={formik.handleSubmit}>
+        <div>
+            <Textarea
+                placeholder={"Enter your message"}
+                name="newMessageBody"
+                value={formik.values.newMessageBody}
+                onChange={formik.handleChange}
+            touched={formik.touched.newMessageBody} errors={formik.errors.newMessageBody}/>
+            <button type={"submit"}>add message</button>
+        </div>
+    </form>
 }

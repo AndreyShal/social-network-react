@@ -7,11 +7,13 @@ const initialState: InitialStateType = {
     totalUsersCount: 0,
     currentPage: 2,
     isFetching: true,
-    followingInProgress: []
+    followingInProgress: [],
+    fake: 10
 }
 
 export const usersReducer = (state: InitialStateType = initialState, action: UsersReducerActionType): InitialStateType => {
     switch (action.type) {
+        case "FAKE": return {...state, fake: state.fake + 1}
         case "FOLLOW": {
             const copyState = {
                 ...state,
@@ -57,7 +59,7 @@ export const usersReducer = (state: InitialStateType = initialState, action: Use
     }
 }
 
-export type FollowType = ReturnType<typeof followSuccess>
+export const setFake = () => ({type: "FAKE"} as const)
 
 export const followSuccess = (userId: number) => {
     return {
@@ -125,12 +127,12 @@ export const toggleFollowingProgress = (isFetching: boolean, userId: number) => 
 }
 
 //thanks
-export const getUsers = (currentPage: number, pageSize: number) => (dispatch: Dispatch) => {
+export const getUsers = (page: number, pageSize: number) => (dispatch: Dispatch) => {
     dispatch(toggleIsFetching(true))
 
-    usersAPI.getUsers(currentPage, pageSize).then(res => {
+    usersAPI.getUsers(page, pageSize).then(res => {
         const data = res.data;
-        dispatch(setCurrentPage(currentPage));
+        dispatch(setCurrentPage(page));
         dispatch(setUsers(data.items))
         dispatch(setUsersTotalCount(data.totalCount))
         dispatch(toggleIsFetching(false))
@@ -185,7 +187,9 @@ export type InitialStateType = {
     currentPage: number
     isFetching: boolean
     followingInProgress: number[]
+    fake: number
 }
+export type FollowType = ReturnType<typeof followSuccess>
 export type UnfollowType = ReturnType<typeof unfollowSuccess>
 export type SetUsersType = ReturnType<typeof setUsers>
 export type SetCurrentPageType = ReturnType<typeof setCurrentPage>
@@ -200,3 +204,4 @@ export type UsersReducerActionType =
     | SetTotalUsersCountType
     | ToggleIsFetchingType
     | ToggleFollowingProgressType
+| ReturnType<typeof setFake>

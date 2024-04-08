@@ -1,8 +1,7 @@
 import {Dispatch} from "redux";
-import {authApi, profileAPI, usersAPI} from "../api/api";
+import {profileAPI} from "../api/api";
 
 const initialState = {
-    messageForNewPost: 'it camasutra',
     posts: [
         {id: 1, message: 'Hi, how are you?', likesCount: 12},
         {id: 2, message: 'It\'s my first post', likesCount: 11},
@@ -17,10 +16,7 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Pr
     switch (action.type) {
         case "ADD-POST": {
             const newPost: PostType = {id: new Date().getTime(), message: action.payload.newPost, likesCount: 0};
-            return {...state, messageForNewPost: "", posts: [newPost, ...state.posts]}
-        }
-        case "UPDATE-NEW-POST-TEXT": {
-            return {...state, messageForNewPost: action.payload.newText}
+            return {...state, posts: [...state.posts, newPost]}
         }
         case "SET_USER_PROFILE": {
             return {...state, profile: action.payload.profile}
@@ -38,15 +34,6 @@ export const addPostActionCreator = (newPost: string) => {
         type: 'ADD-POST',
         payload: {
             newPost
-        }
-    } as const
-}
-
-export const updateNewPostTextActionCreator = (newText: string) => {
-    return {
-        type: 'UPDATE-NEW-POST-TEXT',
-        payload: {
-            newText
         }
     } as const
 }
@@ -124,14 +111,12 @@ export type ProfileType = {
 
 }
 export type ProfilePageType = {
-    messageForNewPost: string
     posts: Array<PostType>
     profile: null | ProfileType
     status: string
 }
 
-export type ProfileReducerActionType = AddPostActionType | UpdateNewPostTextActionType | SetUserProfile | SetStatus
+export type ProfileReducerActionType = AddPostActionType | SetUserProfile | SetStatus
 export type AddPostActionType = ReturnType<typeof addPostActionCreator>
-export type UpdateNewPostTextActionType = ReturnType<typeof updateNewPostTextActionCreator>
 export type SetUserProfile = ReturnType<typeof setUserProfile>
 export type SetStatus = ReturnType<typeof setStatus>

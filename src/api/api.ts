@@ -12,7 +12,7 @@ export const usersAPI = {
         return instance.get(`users?page=${currentPage}&count=${pageSize}`)
     },
     follow(userId: number) {
-        return instance.post(`follow/${userId}`,{})
+        return instance.post(`follow/${userId}`, {})
     },
     unFollow(userId: number) {
         return instance.delete(`follow/${userId}`)
@@ -21,20 +21,26 @@ export const usersAPI = {
 }
 
 export const profileAPI = {
-    getProfile(userId: number){
+    getProfile(userId: number) {
         return instance.get(`profile/${userId}`)
     },
     getStatus(userId: number) {
         return instance.get(`profile/status/${userId}`)
     },
     updateStatus(status: string) {
-        return instance.put(`profile/status`,{status: status})
+        return instance.put(`profile/status`, {status: status})
     },
 }
 
 export const authApi = {
     authMe() {
         return instance.get(`auth/me`)
+    },
+    login(email: string, password: string, rememberMe: boolean = false) {
+        return instance.post(`auth/login`, {email, password, rememberMe})
+    },
+    logout() {
+        return instance.delete(`auth/login`)
     },
 }
 
