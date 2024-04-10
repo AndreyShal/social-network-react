@@ -18,6 +18,9 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Pr
             const newPost: PostType = {id: new Date().getTime(), message: action.payload.newPost, likesCount: 0};
             return {...state, posts: [...state.posts, newPost]}
         }
+        case "DELETE-POST": {
+            return {...state, posts: state.posts.filter(el => el.id !== action.payload.id)}
+        }
         case "SET_USER_PROFILE": {
             return {...state, profile: action.payload.profile}
         }
@@ -37,6 +40,14 @@ export const addPostActionCreator = (newPost: string) => {
         }
     } as const
 }
+export const deletePost = (id: number) => {
+    return {
+        type: 'DELETE-POST',
+        payload: {
+            id
+        }
+    } as const
+}
 
 export const setUserProfile = (profile: ProfileType) => {
     return {
@@ -51,13 +62,10 @@ export const setStatus = (status: string) => ({type: 'PROFILE/SET-STATUS', paylo
 
 //thanks
 
-export const getProfile = (userId: number) => (dispatch: Dispatch) => {
-    profileAPI.getProfile(userId).then(res => {
+export const getProfile = (userId: number) => async (dispatch: Dispatch) => {
+    const res = await profileAPI.getProfile(userId)
             const data = res.data
             dispatch(setUserProfile(data))
-
-        }
-    )
 }
 
 export const getStatus = (userId: number) => async (dispatch: Dispatch) => {
@@ -116,7 +124,8 @@ export type ProfilePageType = {
     status: string
 }
 
-export type ProfileReducerActionType = AddPostActionType | SetUserProfile | SetStatus
+export type ProfileReducerActionType = AddPostActionType | SetUserProfile | SetStatus | DeletePostActionsType
 export type AddPostActionType = ReturnType<typeof addPostActionCreator>
+export type DeletePostActionsType = ReturnType<typeof deletePost>
 export type SetUserProfile = ReturnType<typeof setUserProfile>
 export type SetStatus = ReturnType<typeof setStatus>

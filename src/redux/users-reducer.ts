@@ -1,5 +1,6 @@
 import {Dispatch} from "redux";
 import {usersAPI} from "../api/api";
+import {updateObjectInArray} from "../utils/object-hekpers";
 
 const initialState: InitialStateType = {
     users: [],
@@ -13,18 +14,18 @@ const initialState: InitialStateType = {
 
 export const usersReducer = (state: InitialStateType = initialState, action: UsersReducerActionType): InitialStateType => {
     switch (action.type) {
-        case "FAKE": return {...state, fake: state.fake + 1}
         case "FOLLOW": {
             const copyState = {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: true} : el)
+                // users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: true} : el)
+                users: updateObjectInArray(state.users,action.payload.userId,"id",{followed: true})
             }
             return copyState
         }
         case "UNFOLLOW": {
             const copyState = {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: false} : el)
+                users: updateObjectInArray(state.users,action.payload.userId,"id",{followed: false})
             }
             return copyState
         }
@@ -58,8 +59,6 @@ export const usersReducer = (state: InitialStateType = initialState, action: Use
             return state
     }
 }
-
-export const setFake = () => ({type: "FAKE"} as const)
 
 export const followSuccess = (userId: number) => {
     return {
@@ -127,40 +126,35 @@ export const toggleFollowingProgress = (isFetching: boolean, userId: number) => 
 }
 
 //thanks
-export const getUsers = (page: number, pageSize: number) => (dispatch: Dispatch) => {
+export const getUsers = (page: number, pageSize: number) => async (dispatch: Dispatch) => {
     dispatch(toggleIsFetching(true))
+    dispatch(setCurrentPage(page));
 
-    usersAPI.getUsers(page, pageSize).then(res => {
-        const data = res.data;
-        dispatch(setCurrentPage(page));
-        dispatch(setUsers(data.items))
-        dispatch(setUsersTotalCount(data.totalCount))
-        dispatch(toggleIsFetching(false))
-    })
+    const res = await usersAPI.getUsers(page, pageSize)
+    const data = res.data;
+    dispatch(setUsers(data.items))
+    dispatch(setUsersTotalCount(data.totalCount))
+    dispatch(toggleIsFetching(false))
+}
+
+const followUnfollowFlow = async (dispatch: Dispatch, userId: number, apiMethod: (userId: number) => any, actionCreator: (userId: number)=> FollowType | UnfollowType) => {
+    dispatch(toggleFollowingProgress(true, userId))
+    const response = await apiMethod(userId);
+
+    if(response.data.resultCode === 0) {
+        dispatch(actionCreator(userId))
+    }
+    dispatch(toggleFollowingProgress(false, userId))
 }
 
 export const follow = (userId: number) => {
-    return (dispatch: Dispatch) => {
-        dispatch(toggleFollowingProgress(true, userId))
-        usersAPI.follow(userId).then(res => {
-            const data = res.data
-            if (data.resultCode === 0) {
-                dispatch(followSuccess(userId))
-            }
-            dispatch(toggleFollowingProgress(false, userId))
-        })
+    return async (dispatch: Dispatch) => {
+        followUnfollowFlow(dispatch,userId,usersAPI.follow,followSuccess)
     }
 }
 export const unfollow = (userId: number) => {
-    return (dispatch: Dispatch) => {
-        dispatch(toggleFollowingProgress(true, userId))
-        usersAPI.unFollow(userId).then(res => {
-            const data = res.data
-            if (data.resultCode === 0) {
-                dispatch(unfollowSuccess(userId))
-            }
-            dispatch(toggleFollowingProgress(false, userId))
-        })
+    return async (dispatch: Dispatch) => {
+        followUnfollowFlow(dispatch,userId,usersAPI.unFollow,unfollowSuccess)
     }
 }
 
@@ -204,4 +198,3 @@ export type UsersReducerActionType =
     | SetTotalUsersCountType
     | ToggleIsFetchingType
     | ToggleFollowingProgressType
-| ReturnType<typeof setFake>

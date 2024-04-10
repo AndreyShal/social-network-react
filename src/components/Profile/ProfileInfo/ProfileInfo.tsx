@@ -10,7 +10,7 @@ type ProfileInfoProps = {
     updateStatus: (status: string) => void
 }
 
-export const ProfileInfo = (props: ProfileInfoProps) => {
+export const ProfileInfo = React.memo((props: ProfileInfoProps) => {
     if (!props.profile) {
         return <Preloader/>
     }
@@ -27,4 +27,4 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
             </div>
         </div>
     )
-}
+})

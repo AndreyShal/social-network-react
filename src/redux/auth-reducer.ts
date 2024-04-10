@@ -1,6 +1,8 @@
 import {authApi} from "../api/api";
 import {Dispatch} from "redux";
 import {setAppError} from "./app-reducer";
+import {AppDispatchType, AppThunk} from "../redux/redux-store";
+import {ThunkDispatch} from "redux-thunk";
 
 const initialState: InitialStateType = {
     userId: null,
@@ -10,12 +12,15 @@ const initialState: InitialStateType = {
     isFetching: true
 }
 
+const SET_USER_DATA = "AUTH/SET_USER_DATA"
+const TOGGLE_IS_FETCHING = "AUTH/TOGGLE_IS_FETCHING"
+
 export const authReducer = (state: InitialStateType = initialState, action: AuthReducerActionType): InitialStateType => {
     switch (action.type) {
-        case "SET_USER_DATA": {
+        case SET_USER_DATA: {
             return {...state, ...action.payload.data}
         }
-        case "TOGGLE_IS_FETCHING": {
+        case TOGGLE_IS_FETCHING: {
             return {...state, isFetching: action.payload.isFetching}
         }
         default:
@@ -25,7 +30,7 @@ export const authReducer = (state: InitialStateType = initialState, action: Auth
 
 export const setAuthUserData = (userId:number | null, email:string | null, login:string | null, isAuth: boolean) => {
     return {
-        type: 'SET_USER_DATA',
+        type: SET_USER_DATA,
         payload: {
             data: {userId, email,login, isAuth}
         }
@@ -34,7 +39,7 @@ export const setAuthUserData = (userId:number | null, email:string | null, login
 
 export const toggleIsFetching = (isFetching: boolean) => {
     return {
-        type: 'TOGGLE_IS_FETCHING',
+        type: TOGGLE_IS_FETCHING,
         payload: {
             isFetching
         }
@@ -42,18 +47,18 @@ export const toggleIsFetching = (isFetching: boolean) => {
 }
 
 //thanks
-export const getAuthUserData = ():any => (dispatch: Dispatch) => {
-    return authApi.authMe().then(res=> {
+export const getAuthUserData= ()  => async (dispatch: Dispatch) => {
+     const res = await authApi.authMe();
         const data = res.data
         if(data.resultCode === 0) {
             const {id, email, login} = data.data
             dispatch(setAuthUserData(id, email, login, true))
         }
-    })
+        return res
 }
 
-export const login = (email: string, password: string, rememberMe:boolean) => (dispatch: Dispatch) => {
-    authApi.login(email,password,rememberMe).then(res=> {
+export const login  = (email: string, password: string, rememberMe:boolean):AppThunk => async (dispatch) => {
+    const res = await authApi.login(email,password,rememberMe);
         const data = res.data
         if(data.resultCode === 0) {
             dispatch(getAuthUserData())
@@ -61,16 +66,14 @@ export const login = (email: string, password: string, rememberMe:boolean) => (d
             const message = res.data.messages.length > 0 ? res.data.messages[0] : "Some error"
             dispatch(setAppError(message))
         }
-    })
 }
 
-export const logout = () => (dispatch: Dispatch) => {
-    authApi.logout().then(res=> {
+export const logout = () =>async (dispatch: Dispatch) => {
+    const res =await authApi.logout()
         const data = res.data
         if(data.resultCode === 0) {
             dispatch(setAuthUserData(null,null,null,false))
         }
-    })
 }
 
 

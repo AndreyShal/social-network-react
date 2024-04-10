@@ -5,8 +5,6 @@ import App from './App';
 import store from "./redux/redux-store"
 import {Provider} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
-import {setFake} from "./redux/users-reducer";
-
 
 // export const renderTree = (state: any) => {
 //     ReactDOM.render(
@@ -24,9 +22,6 @@ import {setFake} from "./redux/users-reducer";
 //     renderTree(state)
 // })
 //
-setInterval(()=>{
-    store.dispatch(setFake())
-},1000)
 
 export const renderTree = () => {
     ReactDOM.render(

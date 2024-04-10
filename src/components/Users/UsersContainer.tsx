@@ -16,7 +16,6 @@ import {
 } from "../../redux/users-selectors";
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
-    console.log('mapStateToProps USERS')
     return {
         users: selectGetUsersSuperSelector(state),
         pageSize: selectGetPageSize(state),

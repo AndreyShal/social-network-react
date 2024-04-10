@@ -6,7 +6,6 @@ type ProfileStatusType = {
 }
 
 export class ProfileStatus extends React.Component<ProfileStatusType> {
-    statusInputRef = React.createRef()
     state = {
         editMode: false,
         status: this.props.status

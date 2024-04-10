@@ -7,7 +7,7 @@ import {maxLengthFn, requiredFn} from "../../../utils/validators/validators";
 import {Textarea} from "../../common/Preloader/FormsControls/FormsControls";
 
 
-export const MyPosts = (props: MyPostsPropsType) => {
+export const MyPosts = React.memo((props: MyPostsPropsType)=> {
 
     return <div className={s.postsBlock}>
         <h3>My posts</h3>
@@ -20,7 +20,7 @@ export const MyPosts = (props: MyPostsPropsType) => {
             }
         </div>
     </div>
-}
+})
 
 type AddNewPostForm = {
     addPost: (value: string) => void

@@ -41,17 +41,14 @@ export const LoginForm = (props: LoginForm) => {
             <div>
                 <Input placeholder={"Email"}
                        type="text"
-                       name="email"
-                       onChange={formik.handleChange}
-                       value={formik.values.email}
-                       touched={formik.touched.email} errors={formik.errors.email}/>
+                       {...formik.getFieldProps('email')}
+                       touched={formik.touched.email} errors={formik.errors.email}
+                />
             </div>
             <div>
                 <Input placeholder={"Password"}
                        type="password"
-                       name="password"
-                       onChange={formik.handleChange}
-                       value={formik.values.password}
+                       {...formik.getFieldProps('password')}
                        touched={formik.touched.password} errors={formik.errors.password}/>
             </div>
             <div>
