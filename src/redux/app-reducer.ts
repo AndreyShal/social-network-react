@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {getAuthUserData} from "./auth-reducer";
+import {getAuthUserData} from "redux/auth-reducer";
 
 const initialState = {
     status: "idle" as RequestStatusType,
@@ -25,7 +25,8 @@ export const setAppStatus = (status: RequestStatusType) => ({type: 'APP/SET-STAT
 export const initializedSuccess = (isInitialized: boolean) => ({type: 'APP/SET-INITIALIZED', isInitialized} as const)
 
 //thunks
-export const initializeApp = ()=> (dispatch: Dispatch) => {
+export const initializeApp = ()=> (dispatch: Dispatch | any) => {
+
     const promiseAuthUserData =  dispatch(getAuthUserData())
     Promise.all([promiseAuthUserData]).then(()=>{
         dispatch(initializedSuccess(true))

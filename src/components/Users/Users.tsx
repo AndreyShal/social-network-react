@@ -17,8 +17,8 @@ type UsersProps = {
 const Users = ({users, ...props}: UsersProps) => {
 
     return (<div>
-        <Paginator totalUsersCount={props.totalUsersCount} pageSize={props.pageSize} onPageChanged={props.onPageChanged}
-                   currentPage={props.currentPage}/>
+        <Paginator totalItemsCount={props.totalUsersCount} pageSize={props.pageSize} onPageChanged={props.onPageChanged}
+                   currentPage={props.currentPage} portionSize={10}/>
         <div>
             {users.map(u => {
                 return <User key={u.id} user={u} follow={props.follow} unfollow={props.unfollow}

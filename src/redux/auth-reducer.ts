@@ -48,13 +48,18 @@ export const toggleIsFetching = (isFetching: boolean) => {
 
 //thanks
 export const getAuthUserData= ()  => async (dispatch: Dispatch) => {
-     const res = await authApi.authMe();
+    try {
+        const res = await authApi.authMe();
         const data = res.data
         if(data.resultCode === 0) {
             const {id, email, login} = data.data
             dispatch(setAuthUserData(id, email, login, true))
         }
         return res
+    } catch (e) {
+       console.log(e)
+    }
+
 }
 
 export const login  = (email: string, password: string, rememberMe:boolean):AppThunk => async (dispatch) => {

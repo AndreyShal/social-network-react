@@ -11,8 +11,11 @@ import ErrorSnackbar from "./components/ErrorSnackbar/ErrorSnackbar";
 import {connect, Provider} from "react-redux";
 import store, {AppStateType} from "./redux/redux-store";
 import {compose} from "redux";
-import {Preloader} from "./components/common/Preloader/Preloader";
+// import {Preloader} from "./components/common/Preloader/Preloader";
 import {initializeApp} from "./redux/app-reducer";
+import {Preloader} from "components/common/Preloader/Preloader";
+// import {Preloader} from "src/components/common/Preloader/Preloader";
+// import {Preloader} from "src/components/common/Preloader/Preloader";
 // import {Preloader} from "src/components/common/Preloader/Preloader";
 
 class App extends React.Component<AppProps> {
