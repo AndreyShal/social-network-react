@@ -1,22 +1,25 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import './App.css';
 import {BrowserRouter, Route, withRouter} from "react-router-dom";
-import {Navbar} from "./components/Navbar";
+import {Navbar} from "components/Navbar";
 import UsersContainer from "./components/Users/UsersContainer";
-import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
-import {DialogsContainer} from "./components/Dialogs/DialogsContainer";
+// import {DialogsContainer} from "components/Dialogs/DialogsContainer";
 import ErrorSnackbar from "./components/ErrorSnackbar/ErrorSnackbar";
 import {connect, Provider} from "react-redux";
 import store, {AppStateType} from "./redux/redux-store";
 import {compose} from "redux";
-// import {Preloader} from "./components/common/Preloader/Preloader";
-import {initializeApp} from "./redux/app-reducer";
+import {initializeApp} from "redux/app-reducer";
 import {Preloader} from "components/common/Preloader/Preloader";
-// import {Preloader} from "src/components/common/Preloader/Preloader";
-// import {Preloader} from "src/components/common/Preloader/Preloader";
-// import {Preloader} from "src/components/common/Preloader/Preloader";
+import {WithSuspense} from "hoc/withSuspense";
+import DialogsContainer from "components/Dialogs/DialogsContainer";
+
+// const DialogsContainer = React.lazy(()=> import('./components/Dialogs/DialogsContainer'))
+const ProfileContainer = React.lazy(() => import('components/Profile/ProfileContainer'))
+const DDialogsContainer = React.lazy(() => import('components/Dialogs/DialogsContainer'))
+
+// console.log("_DialogsContainer",_DialogsContainer)
 
 class App extends React.Component<AppProps> {
 
@@ -25,7 +28,7 @@ class App extends React.Component<AppProps> {
     }
 
     render() {
-        if(!this.props.isInitialized) {
+        if (!this.props.isInitialized) {
             return <Preloader/>
         }
         return (
@@ -35,14 +38,25 @@ class App extends React.Component<AppProps> {
                 <Navbar/>
                 <div className={"app-wrapper-content"}>
 
+                    {/*<Route*/}
+                    {/*    path={"/dialogs"}*/}
+                    {/*    render={() => <WithSuspense>*/}
+                    {/*        <DDialogsContainer/>*/}
+                    {/*    </WithSuspense>*/}
+                    {/*    }/>*/}
                     <Route
                         path={"/dialogs"}
-                        render={() => <DialogsContainer/>}
-                    />
+                        // render={WithSuspense(DDialogsContainer)}/>
+                        render={()=><div>Dialog</div>}/>
+                    {/*<Route*/}
+                    {/*    path={"/profile/:userId?"}*/}
+                    {/*    render={() => <WithSuspense>*/}
+                    {/*        <ProfileContainer/>*/}
+                    {/*    </WithSuspense>*/}
+                    {/*    }/>*/}
                     <Route
-                        path={"/profile/:userId?"}
-                        render={() => <ProfileContainer/>}
-                    />
+                        path={"/profile"}
+                        render={WithSuspense(ProfileContainer)}/>
                     <Route
                         path={"/users"}
                         render={() => <UsersContainer/>}
@@ -68,9 +82,9 @@ const mapDispatchToProps: mapDispatchToProps = {
 
 export default compose<React.ComponentType>(withRouter, connect(mapStateToProps, mapDispatchToProps))(App);
 
-const AppContainer  = compose<React.ComponentType>(withRouter, connect(mapStateToProps, mapDispatchToProps))(App);
+const AppContainer = compose<React.ComponentType>(withRouter, connect(mapStateToProps, mapDispatchToProps))(App);
 
-export const SamuraiJSApp = (props:any)=> {
+export const SamuraiJSApp = (props: any) => {
     return (
         <BrowserRouter>
             <Provider store={store}>

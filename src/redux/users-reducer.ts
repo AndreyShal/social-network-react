@@ -4,7 +4,7 @@ import {updateObjectInArray} from "../utils/object-hekpers";
 
 const initialState: InitialStateType = {
     users: [],
-    pageSize: 5,
+    pageSize: 30,
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: true,
