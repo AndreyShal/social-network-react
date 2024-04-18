@@ -1,1 +1,0 @@
-{"version":3,"file":"static/css/460.390c742b.chunk.css","mappings":"AAAA,2CACI,YACJ,CAEA,qBACI,eACJ","sources":["components/Profile/MyPosts/myPost.module.css"],"sourcesContent":[".postsBlock {\r\n    padding: 10px;\r\n}\r\n\r\n.posts {\r\n    margin-top: 10px\r\n}"],"names":[],"sourceRoot":""}

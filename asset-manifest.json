@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/social-network-react/static/css/main.9c8886bc.css",
-    "main.js": "/social-network-react/static/js/main.1e7882b8.js",
-    "static/css/460.390c742b.chunk.css": "/social-network-react/static/css/460.390c742b.chunk.css",
-    "static/js/460.a09bf7ef.chunk.js": "/social-network-react/static/js/460.a09bf7ef.chunk.js",
+    "main.js": "/social-network-react/static/js/main.bddadbee.js",
+    "static/css/460.83e8a0ed.chunk.css": "/social-network-react/static/css/460.83e8a0ed.chunk.css",
+    "static/js/460.bba02d7e.chunk.js": "/social-network-react/static/js/460.bba02d7e.chunk.js",
     "static/css/785.ef3b9b8a.chunk.css": "/social-network-react/static/css/785.ef3b9b8a.chunk.css",
     "static/js/785.c4e0fddb.chunk.js": "/social-network-react/static/js/785.c4e0fddb.chunk.js",
     "static/media/user.jpg": "/social-network-react/static/media/user.6ba7eea037af5224699b.jpg",
     "static/media/preloader.svg": "/social-network-react/static/media/preloader.33657626a38247a72ad065917ba09400.svg",
     "index.html": "/social-network-react/index.html",
     "main.9c8886bc.css.map": "/social-network-react/static/css/main.9c8886bc.css.map",
-    "main.1e7882b8.js.map": "/social-network-react/static/js/main.1e7882b8.js.map",
-    "460.390c742b.chunk.css.map": "/social-network-react/static/css/460.390c742b.chunk.css.map",
-    "460.a09bf7ef.chunk.js.map": "/social-network-react/static/js/460.a09bf7ef.chunk.js.map",
+    "main.bddadbee.js.map": "/social-network-react/static/js/main.bddadbee.js.map",
+    "460.83e8a0ed.chunk.css.map": "/social-network-react/static/css/460.83e8a0ed.chunk.css.map",
+    "460.bba02d7e.chunk.js.map": "/social-network-react/static/js/460.bba02d7e.chunk.js.map",
     "785.ef3b9b8a.chunk.css.map": "/social-network-react/static/css/785.ef3b9b8a.chunk.css.map",
     "785.c4e0fddb.chunk.js.map": "/social-network-react/static/js/785.c4e0fddb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9c8886bc.css",
-    "static/js/main.1e7882b8.js"
+    "static/js/main.bddadbee.js"
   ]
 }
