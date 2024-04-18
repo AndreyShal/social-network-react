@@ -1,18 +1,27 @@
-import React from "react";
+import React, {ChangeEvent} from "react";
 import s from "./profileInfo.module.css"
-import {ProfileType} from "../../../redux/profile-reducer";
+import {ProfileType} from "redux/profile-reducer";
 import {Preloader} from "../../common/Preloader/Preloader";
 import {ProfileStatus} from './ProfileStatus'
+import userPhoto from "../../../assests/images/user.jpg";
 
 type ProfileInfoProps = {
     profile: ProfileType | null
     status: string
     updateStatus: (status: string) => void
+    isOwner: boolean
+    savePhoto: (photo: File)=>void
 }
 
 export const ProfileInfo = React.memo((props: ProfileInfoProps) => {
     if (!props.profile) {
         return <Preloader/>
+    }
+    console.log(props.isOwner)
+    const onMainPhotoSelected = (e:ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files?.length) {
+            props.savePhoto(e.target.files[0])
+        }
     }
     return (<div>
             <div>
@@ -22,8 +31,8 @@ export const ProfileInfo = React.memo((props: ProfileInfoProps) => {
             <div className={s.descriptionBlock}>
                 <p>{props.profile.aboutMe}</p>
                 <p>{props.profile.userId}</p>
-                <img src={props.profile.photos.large} alt={props.profile.photos.large}/>
-                ava + description
+                <img src={props.profile.photos.large || userPhoto} alt={props.profile.photos.large} className={s.mainPhoto}/>
+                {props.isOwner && <input type={"file"} onChange={onMainPhotoSelected}/>}
             </div>
         </div>
     )

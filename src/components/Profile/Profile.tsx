@@ -8,12 +8,14 @@ type ProfileProps = {
     profile: ProfileType | null
     status: string
     updateStatus: (status: string) => void
+    isOwner: boolean
+    savePhoto: (photo: File)=>void
 }
 
 export const Profile = (props: ProfileProps) => {
     return (
         <div>
-            <ProfileInfo profile={props.profile} status={props.status} updateStatus={props.updateStatus}/>
+            <ProfileInfo isOwner={props.isOwner} profile={props.profile} status={props.status} updateStatus={props.updateStatus} savePhoto={props.savePhoto}/>
             <NavLink to={`/profile/${30953}`}>'asdfasdf'</NavLink>
             <MyPostsContainer/>
         </div>

@@ -1,3 +1,8 @@
 descriptionBlock {
     padding: 10px;
 }
+
+.mainPhoto {
+    object-fit: contain;
+    max-width: 200px;
+}

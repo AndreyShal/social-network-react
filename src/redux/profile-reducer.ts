@@ -27,6 +27,13 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Pr
         case "PROFILE/SET-STATUS": {
             return {...state, status: action.payload.status}
         }
+        case "PROFILE/SAVE-PHOTO-SUCCESS": {
+            if (state.profile) {
+                return {...state, profile: {...state.profile, photos: {...action.payload.photos}}}
+            } else {
+                return state
+            }
+        }
         default:
             return state
     }
@@ -59,13 +66,17 @@ export const setUserProfile = (profile: ProfileType) => {
 }
 
 export const setStatus = (status: string) => ({type: 'PROFILE/SET-STATUS', payload: {status}} as const)
+export const savePhotoSuccess = (photos: {
+    "small": string,
+    "large": string
+}) => ({type: 'PROFILE/SAVE-PHOTO-SUCCESS', payload: {photos}} as const)
 
 //thanks
 
 export const getProfile = (userId: number) => async (dispatch: Dispatch) => {
     const res = await profileAPI.getProfile(userId)
-            const data = res.data
-            dispatch(setUserProfile(data))
+    const data = res.data
+    dispatch(setUserProfile(data))
 }
 
 export const getStatus = (userId: number) => async (dispatch: Dispatch) => {
@@ -82,6 +93,17 @@ export const updateStatus = (status: string) => async (dispatch: Dispatch) => {
         const res = await profileAPI.updateStatus(status)
         if (res.data.resultCode === 0) {
             dispatch(setStatus(status))
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const savePhoto = (photo: File) => async (dispatch: Dispatch) => {
+    try {
+        const res = await profileAPI.savePhoto(photo)
+        if (res.data.resultCode === 0) {
+            dispatch(savePhotoSuccess(res.data.data.photos))
         }
     } catch (e) {
         console.log(e)
@@ -124,8 +146,14 @@ export type ProfilePageType = {
     status: string
 }
 
-export type ProfileReducerActionType = AddPostActionType | SetUserProfile | SetStatus | DeletePostActionsType
+export type ProfileReducerActionType =
+    AddPostActionType
+    | SetUserProfile
+    | SetStatus
+    | DeletePostActionsType
+    | SavePhotoSuccess
 export type AddPostActionType = ReturnType<typeof addPostActionCreator>
 export type DeletePostActionsType = ReturnType<typeof deletePost>
 export type SetUserProfile = ReturnType<typeof setUserProfile>
 export type SetStatus = ReturnType<typeof setStatus>
+export type SavePhotoSuccess = ReturnType<typeof savePhotoSuccess>
