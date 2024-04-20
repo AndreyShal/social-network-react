@@ -40,7 +40,7 @@ export class ProfileStatus extends React.Component<ProfileStatusType> {
 
     render() {
         return (
-            <div style={{display: "flex"}}>status:
+            <div style={{display: "flex"}}><b>status:&nbsp;</b>
                 {!this.state.editMode &&
                   <div>
                     <span onDoubleClick={this.activateEditMode}>{this.props.status || "no status"}</span>

@@ -1,5 +1,8 @@
 import {Dispatch} from "redux";
 import {profileAPI} from "../api/api";
+import {getUsers} from "redux/users-reducer";
+import {AppStateType, AppThunk} from "redux/redux-store";
+import {setAppError} from "redux/app-reducer";
 
 const initialState = {
     posts: [
@@ -110,6 +113,23 @@ export const savePhoto = (photo: File) => async (dispatch: Dispatch) => {
     }
 }
 
+export const saveProfile = (profile: ProfileSave):AppThunk => async (dispatch, getState) => {
+    // // eslint-disable-next-line no-debugger
+    // debugger
+    const userId = getState().auth.userId
+    try {
+        const res = await profileAPI.saveProfile(profile)
+        if (res.data.resultCode === 0) {
+            // console.log(res)
+            userId && dispatch(getProfile(userId))
+        } else {
+            dispatch(setAppError(res.data.messages[0]))
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 
 //types
 export type PostType = {
@@ -118,18 +138,20 @@ export type PostType = {
     likesCount: number
 }
 
+enum ContactKeys {
+    "facebook" ="facebook",
+    "website"="website",
+    "vk" = "vk",
+    "twitter" = "twitter",
+    "instagram" = "instagram",
+    "youtube" = "youtube",
+    "github" = "github",
+    "mainLink" = "mainLink",
+}
+export type ContactType = Record<ContactKeys, string>
 export type ProfileType = {
     "aboutMe": string,
-    "contacts": {
-        "facebook": null | string,
-        "website": null | string,
-        "vk": null | string,
-        "twitter": null | string,
-        "instagram": null | string,
-        "youtube": null | string,
-        "github": null | string,
-        "mainLink": null | string,
-    },
+    "contacts": ContactType,
     "lookingForAJob": boolean,
     "lookingForAJobDescription": string,
     "fullName": string,
@@ -138,13 +160,24 @@ export type ProfileType = {
         "small": string,
         "large": string
     }
-
 }
+
+export type ProfileSave = Partial<{
+    "aboutMe": string,
+    "contacts": Partial<ContactType>,
+    "lookingForAJob": boolean,
+    "lookingForAJobDescription": string,
+    "fullName": string,
+    "userId": number,
+}>
+
 export type ProfilePageType = {
     posts: Array<PostType>
     profile: null | ProfileType
     status: string
 }
+
+type ProfileTypeNotPhotos = Omit<ProfileType, "photos">
 
 export type ProfileReducerActionType =
     AddPostActionType

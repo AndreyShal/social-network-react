@@ -1,4 +1,5 @@
 import axios from "axios";
+import {ProfileSave} from "redux/profile-reducer";
 
 const instance = axios.create(
     {
@@ -42,6 +43,9 @@ export const profileAPI = {
             }
         })
     },
+    saveProfile(profile:ProfileSave) {
+        return instance.put(`profile`,profile)
+    }
 }
 
 export const authApi = {

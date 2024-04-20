@@ -1,8 +1,12 @@
-descriptionBlock {
+.descriptionBlock {
     padding: 10px;
 }
 
 .mainPhoto {
     object-fit: contain;
     max-width: 200px;
+}
+
+.contact {
+    padding-left: 10px;
 }
