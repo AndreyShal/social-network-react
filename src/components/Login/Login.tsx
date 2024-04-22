@@ -13,7 +13,8 @@ export const LoginForm = (props: LoginForm) => {
         initialValues: {
             email: '',
             password: '',
-            rememberMe: false
+            rememberMe: false,
+            captcha: ''
         },
         validate: values => {
             const errors: FormikErrorType = {}
@@ -32,7 +33,7 @@ export const LoginForm = (props: LoginForm) => {
             return errors
         },
         onSubmit: values => {
-            props.login(values.email, values.password, values.rememberMe)
+            props.login(values.email, values.password, values.rememberMe, values.captcha)
             formik.resetForm()
         },
     });
@@ -55,6 +56,13 @@ export const LoginForm = (props: LoginForm) => {
                 <input type={"checkbox"} name={"rememberMe"} onChange={formik.handleChange}
                        checked={formik.values.rememberMe}/> remember me
             </div>
+            {props.captchaUrl && <div>
+              <img src={props.captchaUrl} alt={"captchaUrl"}/>
+              <Input placeholder={"Symbols from image"}
+                     type="text"
+                     {...formik.getFieldProps('captcha')}
+                     touched={formik.touched.captcha} errors={formik.errors.captcha}/>
+            </div>}
             <div>
                 <button type={"submit"}>Login</button>
             </div>
@@ -73,7 +81,7 @@ const Login = (props: Login) => {
 
     return (<div>
         <h1>Login</h1>
-        <LoginForm login={props.login}/>
+        <LoginForm login={props.login} captchaUrl={props.captchaUrl}/>
     </div>)
 }
 
@@ -84,6 +92,7 @@ const MapDispatchToProps: MapDispatchToProps = {
 const MapStateToProps = (state: AppStateType): MapStateToProps => {
     return {
         isAuth: state.auth.isAuth,
+        captchaUrl: state.auth.captchaUrl
     }
 }
 
@@ -91,7 +100,8 @@ export default connect(MapStateToProps, MapDispatchToProps)(Login)
 
 //types
 type LoginForm = {
-    login: (email: string, password: string, rememberMe: boolean) => void
+    login: (email: string, password: string, rememberMe: boolean, captcha: string) => void
+    captchaUrl: null | string
 }
 
 type FormikErrorType = {
@@ -100,9 +110,10 @@ type FormikErrorType = {
 }
 
 type MapDispatchToProps = {
-    login: (email: string, password: string, rememberMe: boolean) => void
+    login: (email: string, password: string, rememberMe: boolean, captcha: string) => void
 }
 
 type  MapStateToProps = {
     isAuth: boolean
+    captchaUrl: null | string
 }

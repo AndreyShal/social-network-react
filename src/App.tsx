@@ -1,6 +1,6 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import './App.css';
-import {BrowserRouter, Route, withRouter} from "react-router-dom";
+import {BrowserRouter, Redirect, Route, withRouter} from "react-router-dom";
 import {Navbar} from "components/Navbar";
 import UsersContainer from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
@@ -32,22 +32,12 @@ class App extends React.Component<AppProps> {
                 <HeaderContainer/>
                 <Navbar/>
                 <div className={"app-wrapper-content"}>
-
-                    {/*<Route*/}
-                    {/*    path={"/dialogs"}*/}
-                    {/*    render={() => <WithSuspense>*/}
-                    {/*        <DDialogsContainer/>*/}
-                    {/*    </WithSuspense>*/}
-                    {/*    }/>*/}
+                    <Route exact
+                        path={"/"}
+                        render={()=> <Redirect to={"/profile"}/>}/>
                     <Route
                         path={"/dialogs"}
                         render={WithSuspense(DialogsContainer)}/>
-                    {/*<Route*/}
-                    {/*    path={"/profile/:userId?"}*/}
-                    {/*    render={() => <WithSuspense>*/}
-                    {/*        <ProfileContainer/>*/}
-                    {/*    </WithSuspense>*/}
-                    {/*    }/>*/}
                     <Route
                         path={"/profile/:userId?"}
                         render={WithSuspense(ProfileContainer)}/>
@@ -55,10 +45,11 @@ class App extends React.Component<AppProps> {
                         path={"/users"}
                         render={() => <UsersContainer/>}
                     />
-                    <Route
+                    <Route exact
                         path={"/login"}
                         render={() => <Login/>}
                     />
+                    <Route path={'*'} render={()=> <div>404 NOT FOUND</div>}/>
                 </div>
             </div>
         );

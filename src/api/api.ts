@@ -52,19 +52,23 @@ export const authApi = {
     authMe() {
         return instance.get(`auth/me`)
     },
-    login(email: string, password: string, rememberMe: boolean = false) {
-        return instance.post(`auth/login`, {email, password, rememberMe})
+    login(email: string, password: string, rememberMe: boolean = false, captcha: string | null = null) {
+        return instance.post(`auth/login`, {email, password, rememberMe, captcha})
     },
     logout() {
         return instance.delete(`auth/login`)
     },
 }
 
+export const securityApi = {
+    getCaptchaUrl() {
+        return instance.get(`security/get-captcha-url`)
+    },
+}
+
 //types
-//
-// export type ResponseType<D = object> = {
-//     resultCode: number
-//     messages: Array<string>
-//     fieldsErrors: Array<string>
-//     data: D
-// }
+export type ResponseTypeData<D = object> = {
+    resultCode: number
+    messages: Array<string>
+    data: D
+}

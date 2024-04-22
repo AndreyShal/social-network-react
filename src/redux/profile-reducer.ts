@@ -97,8 +97,12 @@ export const updateStatus = (status: string) => async (dispatch: Dispatch) => {
         if (res.data.resultCode === 0) {
             dispatch(setStatus(status))
         }
-    } catch (e) {
-        console.log(e)
+    } catch (error: any) {
+        // const rrr = (error:{ message: string })=>{
+        //     dispatch(setAppError(error.message ? error.message : "Some error occurred" ))
+        // }
+        // error && rrr(error)
+        dispatch(setAppError(error.message ? error.message : "Some error occurred" ))
     }
 }
 

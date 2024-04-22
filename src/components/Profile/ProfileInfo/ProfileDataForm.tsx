@@ -12,9 +12,7 @@ export const ProfileDataForm = ({profile, saveProfile, goToEditMode}: ProfileDat
             lookingForAJob: profile.lookingForAJob,
             lookingForAJobDescription: profile.lookingForAJobDescription,
             aboutMe: profile.aboutMe,
-
             ...profile.contacts,
-
         },
         validate: values => {
             const errors: FormikErrorType = {}
